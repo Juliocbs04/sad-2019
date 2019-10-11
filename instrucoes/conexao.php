@@ -1,6 +1,6 @@
 <?php 
     require_once('../Produto.php');
-    $conexao = new mysqli('localhost', 'root', 'chidori123*', 'bd_comercial');
+    $conexao = new mysqli('localhost', 'root', '', 'bd_comercial');
     
     $sql = $conexao->prepare('select * from produto');
 
