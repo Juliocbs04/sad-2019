@@ -1,24 +1,25 @@
 <?php
-/*
    require_once('DimCliente.php');
+   require_once('DimData.php');
+   require_once('Sumario.php');
+
+   use dimensoes\Sumario;
+   use dimensoes\DimData;
    use dimensoes\DimCliente;
+
    $dimCliente = new DimCliente();
-   try{
-      $sumCliente = $dimCliente->carregarDimCliente();
-      echo "Quantidade de Inclusões: ".$sumCliente->quantidadeInclusoes."<br>";
-      echo "Quantidade de Alterações: ".$sumCliente->quantidadeAlteracoes;
-   }catch(Exception $e){
-      die($e->getMessage());
-   }
-*/
+   $sumCliente = $dimCliente->carregarDimCliente();
+   echo "Clientes: <br>";
+   echo "Inclusões: ".$sumCliente->quantidadeInclusoes."<br>";
+   echo "Alterações: ".$sumCliente->quantidadeAlteracoes."<br>";
+   echo "<br>==============================================<br>";
 
-$data = "2019-10-31";
-echo $data."<br>";
-echo "Dia:".date('d',strtotime($data))."<br>";
-echo "Mês:".date('m',strtotime($data))."<br>";
-echo "Ano:".date('y',strtotime($data))."<br>";
+   $dimData = new DimData();
+   $sumData = $dimData->extrairTransformarDatas();
+   echo "Datas: <br>";
+   echo "Inclusões: ".$sumData->quantidadeInclusoes."<br>";
+   echo "Alterações: ".$sumData->quantidadeAlteracoes."<br>";
+   echo "<br>==============================================<br>";
+ 
 
-
-
-    
 ?>
