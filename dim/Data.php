@@ -32,13 +32,13 @@ class Data{
         }
         
         if($this->mes > 0 && $this->mes < 4){
-            $this->bimestre=1;
+            $this->trimestre=1;
         }else if($this->mes>3 && $this->mes < 7){
-            $this->bimestre=2;
+            $this->trimestre=2;
         }else if($this->mes>6 && $this->mes < 10){
-            $this->bimestre=3;
+            $this->trimestre=3;
         }else{
-            $this->bimestre=4;
+            $this->trimestre=4;
         }
         
         $this->semestre = (date('m', strtotime($data)) <7 ) ? 1: 2;

@@ -68,10 +68,10 @@ class DimData{
             die($e->getMessage());
         }
         $sqlInsertData = $connDimensao->prepare('INSERT INTO dim_data(data,dia,mes,ano,semana_ano,bimestre,trimestre,semestre) VALUES (?,?,?,?,?,?,?,?)');
-        $sqlInsertData->bind_param('siiiiiii',$objData->data, $objData->dia, $objData->mes,$objData->ano,  $objData->semanaAno,$objData->bimestre, $objData->trimestre, $objData->semestre);
+        $sqlInsertData->bind_param('ssssssss',$objData->data, $objData->dia, $objData->mes,$objData->ano, $objData->semanaAno,$objData->bimestre, $objData->trimestre, $objData->semestre);
         //echo "Teste na inclusão".$objData->dia; 
         $sqlInsertData->execute();
-        print_r($objData);
+        //print_r($objData);
         
     }   
 
