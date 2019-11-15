@@ -7,7 +7,7 @@ require_once('Sumario.php');
 
 use dimensoes\Data;
 use dimensoes\Sumario;
-
+// Literatura recomendada: Kimball
 class DimData{
     
 
