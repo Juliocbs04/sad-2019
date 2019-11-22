@@ -42,14 +42,14 @@ class CargaFatosVenda{
                 /*
                 *Busca os itens de cada pedido
                 */
-                $sqlItem = $connComercial->prepare('SELECT pedido, produto, cod_item_produto, quantidade, preco_unit FROM item_pedido WHERE pedido =? ');
+                $sqlItem = $connComercial->prepare('SELECT pedido, produto, cod_item_pedido, quantidade, preco_unit FROM item_pedido WHERE pedido =? ');
                 $sqlItem->bind_param('i',$linhaPedidos['cod_pedido']);
                 $sqlItem->execute();
                 $resultItem = $sqlItem->get_result();
                 while($linhaItem = $resultItem->fetch_assoc()){
 
                     $sqlDimCliente = $connDimensional->prepare('SELECT SK_cliente FROM dim_cliente WHERE cpf = ? and data_fim is null');
-                    $sqlDimCliente->bind_param('ss', $linhaPedidos['cliente']);
+                    $sqlDimCliente->bind_param('i', $linhaPedidos['cliente']);
                     $sqlDimCliente->execute();
                     $resultDimcliente = $sqlDimCliente->get_result();
                     $cliente = $resultDimcliente->fetch_assoc();
@@ -60,10 +60,31 @@ class CargaFatosVenda{
                     $resultDimProduto = $sqlDimProduto->get_result();
                     $produto = $resultDimProduto->fetch_assoc();
                     
+                    $fatoGravar = new FatoVenda();
+                    $fatoGravar->setFatoVenda($cliente['SK_cliente'], $produto['SK_produto'], $linhaData['SK_data'], $linhaPedidos['cod_pedido'], $linhaItem['quantidade'],$linhaItem['preco_unit']);
+
+                    $sqlFatoVenda = $connDimensional->prepare('SELECT cod_fato_vendas, SK_produto, SK_data, pedido, valor_venda, quantidade_venda FROM fato_vendas WHERE pedido = ? AND SK_produto = ?');
+                    $sqlFatoVenda->bind_param('ii', $fatoGravar->pedido,$fatoGravar->SK_produto);
+                    $sqlFatoVenda->execute();
+
+                    $resultFatoVenda = $sqlFatoVenda->get_result();
+                    if($resultFatoVenda->num_rows === 0 ){
+                        $sqlInsertFatoVendas = $connDimensional->prepare('INSERT INTO fato_vendas (SK_cliente, SK_produto, SK_data, pedido, valor_venda, quantidade_venda) VALUES (?,?,?,?,?,?)');
+                        
+                        $sqlInsertFatoVendas->bind_param('iiiidi', $fatoGravar->SK_cliente, $fatoGravar->SK_produto, $fatoGravar->SK_data, $fatoGravar->pedido, $fatoGravar->valor_venda, $fatoGravar->quantidade_venda);
+                        $sqlInsertFatoVendas->execute();
+                        
+                        $sumario->setQuantidadeInclusoes();
+
+                    }
+                    
                 }
+               
             }
+
         
         }
+        return $sumario;
     }
 
     private function conectarBanco($banco){
